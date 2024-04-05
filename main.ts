@@ -15,7 +15,7 @@ function movePointer () {
     }
 }
 function checkValid (x: number, y: number) {
-    if (list[calcIndex(x, y)] != null) {
+    if (cache[calcIndex(x, y)] != null) {
         return false
     }
     return true
@@ -25,8 +25,8 @@ input.onButtonPressed(Button.A, function () {
 })
 input.onButtonPressed(Button.B, function () {
     if (your_turn && checkValid(my_pos.get(LedSpriteProperty.X), my_pos.get(LedSpriteProperty.Y))) {
-        list[calcIndex(my_pos.get(LedSpriteProperty.X), my_pos.get(LedSpriteProperty.Y))] = game.createSprite(my_pos.get(LedSpriteProperty.X), my_pos.get(LedSpriteProperty.Y))
-        list[calcIndex(my_pos.get(LedSpriteProperty.X), my_pos.get(LedSpriteProperty.Y))].set(LedSpriteProperty.Brightness, 180)
+        cache[calcIndex(my_pos.get(LedSpriteProperty.X), my_pos.get(LedSpriteProperty.Y))] = game.createSprite(my_pos.get(LedSpriteProperty.X), my_pos.get(LedSpriteProperty.Y))
+        cache[calcIndex(my_pos.get(LedSpriteProperty.X), my_pos.get(LedSpriteProperty.Y))].set(LedSpriteProperty.Brightness, 180)
         radio.sendValue("x", my_pos.get(LedSpriteProperty.X))
         radio.sendValue("y", my_pos.get(LedSpriteProperty.Y))
         checkWin()
@@ -45,13 +45,13 @@ radio.onReceivedValue(function (name, value) {
         radio_pos.set(LedSpriteProperty.X, value)
     } else {
         radio_pos.set(LedSpriteProperty.Y, value)
-        list[calcIndex(radio_pos.get(LedSpriteProperty.X), radio_pos.get(LedSpriteProperty.Y))] = game.createSprite(radio_pos.get(LedSpriteProperty.X), radio_pos.get(LedSpriteProperty.Y))
-        list[calcIndex(radio_pos.get(LedSpriteProperty.X), radio_pos.get(LedSpriteProperty.Y))].set(LedSpriteProperty.Brightness, 20)
+        cache[calcIndex(radio_pos.get(LedSpriteProperty.X), radio_pos.get(LedSpriteProperty.Y))] = game.createSprite(radio_pos.get(LedSpriteProperty.X), radio_pos.get(LedSpriteProperty.Y))
+        cache[calcIndex(radio_pos.get(LedSpriteProperty.X), radio_pos.get(LedSpriteProperty.Y))].set(LedSpriteProperty.Brightness, 20)
     }
     checkWin()
     your_turn = true
 })
-let list: game.LedSprite[] = []
+let cache: game.LedSprite[] = []
 let your_turn = false
 let radio_pos: game.LedSprite = null
 let my_pos: game.LedSprite = null
