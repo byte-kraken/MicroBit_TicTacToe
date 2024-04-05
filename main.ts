@@ -32,10 +32,10 @@ input.onButtonPressed(Button.A, function () {
     movePointer()
 })
 function checkDia (dia: number) {
-	
+    return 0
 }
 function checkEnd (x: number, y: number) {
-    if (checkRow(x) || (checkCol(y) || false)) {
+    if (checkRow(x) || (checkCol(y) || checkDraw())) {
         if (your_turn) {
             music._playDefaultBackground(music.builtInPlayableMelody(Melodies.Entertainer), music.PlaybackMode.InBackground)
         } else {
