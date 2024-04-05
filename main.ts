@@ -31,11 +31,11 @@ function checkValid (x: number, y: number) {
 input.onButtonPressed(Button.A, function () {
     movePointer()
 })
-function checkDia (dia: number) {
+function checkDia (x: number, y: number) {
     return 0
 }
 function checkEnd (x: number, y: number) {
-    if (checkRow(x) || (checkCol(y) || checkDraw())) {
+    if (checkRow(x) || (checkCol(y) || checkDia(x, y))) {
         if (your_turn) {
             music._playDefaultBackground(music.builtInPlayableMelody(Melodies.Entertainer), music.PlaybackMode.InBackground)
         } else {
