@@ -32,10 +32,12 @@ function checkGameOver (x: number, y: number) {
             music._playDefaultBackground(music.builtInPlayableMelody(Melodies.Dadadadum), music.PlaybackMode.InBackground)
             basic.showString("You lost!")
         }
+        game_over = true
     }
     if (checkDraw()) {
         music._playDefaultBackground(music.builtInPlayableMelody(Melodies.Funk), music.PlaybackMode.InBackground)
         basic.showString("Draw")
+        game_over = true
     }
 }
 function calcStorageIndex (x: number, y: number) {
@@ -52,7 +54,7 @@ function checkDia (x: number, y: number) {
             return true
         }
     }
-    if (x + y == 3) {
+    if (x + y == 2) {
         if (getBrightnessNullSafe(0, 2) == getBrightnessNullSafe(1, 1) && getBrightnessNullSafe(1, 1) == getBrightnessNullSafe(2, 0)) {
             return true
         }
@@ -78,15 +80,17 @@ function moveDisplayPointFromModel (modelPoint: game.LedSprite, displayPoint: ga
 }
 // Create point at selector and end turn.
 input.onButtonPressed(Button.B, function () {
-    if (your_turn && checkValidPos(my_pos.get(LedSpriteProperty.X), my_pos.get(LedSpriteProperty.Y))) {
-        createPoint(my_pos).set(LedSpriteProperty.Brightness, 180)
-        radio.sendValue("x", my_pos.get(LedSpriteProperty.X))
-        radio.sendValue("y", my_pos.get(LedSpriteProperty.Y))
-        checkGameOver(my_pos.get(LedSpriteProperty.X), my_pos.get(LedSpriteProperty.Y))
-        your_turn = false
-        music._playDefaultBackground(music.builtInPlayableMelody(Melodies.BaDing), music.PlaybackMode.InBackground)
-    } else {
-        music._playDefaultBackground(music.builtInPlayableMelody(Melodies.JumpDown), music.PlaybackMode.InBackground)
+    if (!(game_over)) {
+        if (your_turn && checkValidPos(my_pos.get(LedSpriteProperty.X), my_pos.get(LedSpriteProperty.Y))) {
+            createPoint(my_pos).set(LedSpriteProperty.Brightness, 180)
+            radio.sendValue("x", my_pos.get(LedSpriteProperty.X))
+            radio.sendValue("y", my_pos.get(LedSpriteProperty.Y))
+            checkGameOver(my_pos.get(LedSpriteProperty.X), my_pos.get(LedSpriteProperty.Y))
+            your_turn = false
+            music._playDefaultBackground(music.builtInPlayableMelody(Melodies.BaDing), music.PlaybackMode.InBackground)
+        } else {
+            music._playDefaultBackground(music.builtInPlayableMelody(Melodies.JumpDown), music.PlaybackMode.InBackground)
+        }
     }
 })
 radio.onReceivedValue(function (name, value) {
@@ -112,11 +116,13 @@ function createPoint (sprite: game.LedSprite) {
     return storage[calcStorageIndex(sprite.get(LedSpriteProperty.X), sprite.get(LedSpriteProperty.Y))]
 }
 let storage: game.LedSprite[] = []
+let game_over = false
 let your_turn = false
 let my_pos_display: game.LedSprite = null
 let draw_checker: game.LedSprite = null
 let opponent_pos: game.LedSprite = null
 let my_pos: game.LedSprite = null
+music.play(music.builtinPlayableSoundEffect(soundExpression.hello), music.PlaybackMode.InBackground)
 my_pos = game.createSprite(-1, -1)
 my_pos.set(LedSpriteProperty.Brightness, 0)
 opponent_pos = game.createSprite(-1, -1)
@@ -126,8 +132,9 @@ draw_checker.set(LedSpriteProperty.Brightness, 0)
 my_pos_display = game.createSprite(-1, -1)
 draw_checker.set(LedSpriteProperty.Brightness, 0)
 your_turn = true
+game_over = false
 basic.forever(function () {
-    if (your_turn) {
+    if (your_turn && !(game_over)) {
         my_pos_display.set(LedSpriteProperty.Brightness, 255)
         my_pos_display.set(LedSpriteProperty.Blink, 700)
     } else {
