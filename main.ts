@@ -40,6 +40,7 @@ function checkGameOver (x: number, y: number) {
         game_over = true
     }
 }
+// Ensures unique storage indexes for each point.
 function calcStorageIndex (x: number, y: number) {
     return x * 10 + y
 }
@@ -133,6 +134,8 @@ my_pos_display = game.createSprite(-1, -1)
 draw_checker.set(LedSpriteProperty.Brightness, 0)
 your_turn = true
 game_over = false
+// Only used for simulator: Pre-Loads second micro:bit
+radio.sendValue("x", 0)
 basic.forever(function () {
     if (your_turn && !(game_over)) {
         my_pos_display.set(LedSpriteProperty.Brightness, 255)
